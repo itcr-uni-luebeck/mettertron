@@ -1,0 +1,259 @@
+{
+  "components": {
+    "schemas": {
+      "de.uniluebeck.itcr.highmed.api.admin.Status": {
+        "nullable": false,
+        "properties": {
+          "mdrAuthenticationValidUntil": {
+            "description": "local datetime when authentication towards the MDR expires",
+            "nullable": true,
+            "type": "string"
+          },
+          "mdrIsAuthenticated": {
+            "description": "Is the system authenticated towards the MDR?",
+            "nullable": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mdrIsAuthenticated"
+        ],
+        "type": "object"
+      },
+      "de.uniluebeck.itcr.highmed.api.mdr.LinkResponse": {
+        "nullable": false,
+        "properties": {
+          "links": {
+            "description": "the links that relate to this response",
+            "items": {
+              "$ref": "#/components/schemas/de.uniluebeck.itcr.highmed.api.mdr.MdrHateoasResponse.Link"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "links"
+        ],
+        "type": "object"
+      },
+      "de.uniluebeck.itcr.highmed.api.mdr.LocalisedString": {
+        "description": "the name of the folder",
+        "nullable": false,
+        "properties": {
+          "translations": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "description": "a map of language codes to a string in that language",
+            "nullable": false,
+            "type": "object"
+          }
+        },
+        "required": [
+          "translations"
+        ],
+        "type": "object"
+      },
+      "de.uniluebeck.itcr.highmed.api.mdr.MdrFolder": {
+        "nullable": false,
+        "properties": {
+          "id": {
+            "description": "the id of the folder",
+            "nullable": false,
+            "type": "string"
+          },
+          "link": {
+            "description": "the link to the folder definition within the MDR",
+            "nullable": true,
+            "type": "string"
+          },
+          "text": {
+            "$ref": "#/components/schemas/de.uniluebeck.itcr.highmed.api.mdr.LocalisedString"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "type": "object"
+      },
+      "de.uniluebeck.itcr.highmed.api.mdr.MdrHateoasResponse.Link": {
+        "nullable": false,
+        "properties": {
+          "deprecation": {
+            "nullable": true,
+            "type": "string"
+          },
+          "href": {
+            "description": "the link itself",
+            "nullable": false,
+            "type": "string"
+          },
+          "hreflang": {
+            "description": "the language the linked resource is in",
+            "nullable": true,
+            "type": "string"
+          },
+          "media": {
+            "nullable": true,
+            "type": "string"
+          },
+          "rel": {
+            "description": "the relation of the link to the requested resource",
+            "nullable": false,
+            "type": "string"
+          },
+          "title": {
+            "description": "the title of the linked resource",
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "href",
+          "rel"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "email": "j.wiedekopf@uni-luebeck.de",
+      "name": "Joshua Wiedekopf",
+      "url": "https://itcr.uni-luebeck.de"
+    },
+    "description": "Demonstrator for integration of an Meta-Data Repository with a FHIR-based terminology server",
+    "title": "MDR Terminology Test API",
+    "version": "0.0.1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/admin/status": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "mdr_is_authenticated": true,
+                  "mdr_authentication_valid_until": "Tue, 19 Jan 2021 11:26:57 GMT"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/de.uniluebeck.itcr.highmed.api.admin.Status"
+                }
+              }
+            },
+            "description": "represent the status of the system"
+          }
+        },
+        "summary": "Get the status of the system",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/login-mdr": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "mdr_is_authenticated": true,
+                  "mdr_authentication_valid_until": "Tue, 19 Jan 2021 11:26:58 GMT"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/de.uniluebeck.itcr.highmed.api.admin.Status"
+                }
+              }
+            },
+            "description": "represent the status of the system"
+          }
+        },
+        "summary": "login to the MDR using the configured credentials",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/mdr-index": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/de.uniluebeck.itcr.highmed.api.mdr.LinkResponse"
+                }
+              }
+            },
+            "description": "a response from the MDR with only links"
+          }
+        },
+        "summary": "get the link index of the MDR",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/mdr/folders": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "folder-id",
+                    "text": {
+                      "translations": {
+                        "de": "deutscher text",
+                        "en": "english text"
+                      }
+                    },
+                    "link": "http://example.org/centraxx-mdr/api/folders"
+                  }
+                ],
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/de.uniluebeck.itcr.highmed.api.mdr.MdrFolder"
+                  },
+                  "nullable": false,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "list the folders in the MDR",
+        "tags": [
+          "MdrDefinitions"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "the testserver on localhost",
+      "url": "http://localhost:8080"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Administration Routes, such as status, MDR Login, etc.",
+      "name": "Admin"
+    },
+    {
+      "description": "Get definitions in the MDR",
+      "name": "MdrDefinitions"
+    }
+  ]
+}
