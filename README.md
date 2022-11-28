@@ -1,5 +1,7 @@
 # Mettertron
 
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7373740.svg)](https://doi.org/10.5281/zenodo.7373740)
+
 *Mettertron* is a system for performing code validation and code mappings via definitions defined in an Metadata Repository (MDR), while the required terminology is maintained in a HL7 FHIR Terminology server (TS).
 
 This represents a paradigm shift from the status quo. Previously, MDRs required that terminology is maintained in the MDR itself, and often don't support mapping operations. Our system, which is closely aligned to the ISO/TS 21526 standard for MDRs, delegates the process of terminology maintenance to a TS, which is much better suited to this job than an MDR can be.
